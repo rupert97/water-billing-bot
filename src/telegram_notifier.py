@@ -103,9 +103,9 @@ class TelegramNotifier:
 
         try:
             url = self.API_URL.format(token=self.token)
-            
+
             # Bandit B310 Safety Check
-            if not url.startswith('https://'):
+            if not url.startswith("https://"):
                 raise ValueError("Insecure URL scheme")
 
             payload = {"chat_id": self.chat_id, "text": text, "parse_mode": "HTML"}
@@ -115,7 +115,7 @@ class TelegramNotifier:
                 url, data=json_data, headers={"Content-Type": "application/json"}
             )
 
-            with urllib.request.urlopen(request, timeout=10) as response: # nosec B310
+            with urllib.request.urlopen(request, timeout=10) as response:  # nosec B310
                 result = json.loads(response.read().decode("utf-8"))
                 return cast(bool, result.get("ok"))
 

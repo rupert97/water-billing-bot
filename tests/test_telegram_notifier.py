@@ -86,7 +86,9 @@ class TestTelegramNotifier(unittest.TestCase):
 
     def test_send_message_insecure_url(self):
         """Test send_message rejects non-https URLs"""
-        with patch.object(self.notifier, "API_URL", "http://api.telegram.org/bot{token}/sendMessage"):
+        with patch.object(
+            self.notifier, "API_URL", "http://api.telegram.org/bot{token}/sendMessage"
+        ):
             result = self.notifier.send_message("Test message")
             self.assertFalse(result)
 

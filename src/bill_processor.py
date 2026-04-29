@@ -6,6 +6,7 @@ from typing import Dict, List, Any, cast
 
 logger = logging.getLogger()
 
+
 class BillProcessor:
     URGENT_THRESHOLD_DAYS = 2
 

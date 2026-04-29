@@ -29,11 +29,17 @@ class SimilpayClient:
             raise ValueError("SIMILPAY_USER_REFERENCE environment variable is not set")
         self.USER_REFERENCE = user_ref
 
-    def _safe_urlopen(self, url: str, data: Optional[bytes] = None, headers: Optional[Dict[str, str]] = None, timeout: int = 10) -> Any:
+    def _safe_urlopen(
+        self,
+        url: str,
+        data: Optional[bytes] = None,
+        headers: Optional[Dict[str, str]] = None,
+        timeout: int = 10,
+    ) -> Any:
         """Helper to satisfy Bandit B310 by verifying https scheme"""
-        if not url.startswith('https://'):
+        if not url.startswith("https://"):
             raise ValueError(f"Forbidden URL scheme: {url}")
-        
+
         req = urllib.request.Request(url, data=data, headers=headers or {})
         return urllib.request.urlopen(req, timeout=timeout)  # nosec B310
 
@@ -52,7 +58,9 @@ class SimilpayClient:
         }
 
         try:
-            with self._safe_urlopen(self.auth_url, data=encoded_payload, headers=headers) as response:
+            with self._safe_urlopen(
+                self.auth_url, data=encoded_payload, headers=headers
+            ) as response:
                 result = json.loads(response.read().decode())
                 return cast(Optional[str], result.get("access_token"))
 
@@ -95,13 +103,15 @@ class SimilpayClient:
 
         data = cast(Dict[str, Any], api_response.get("Data", {}))
         amount = data.get("amount")
-        
+
         if amount and float(amount) > 0:
-            return [{
-                "amount": amount,
-                "dueDate": data.get("expirationDate"),
-                "reference": data.get("reference") or self.USER_REFERENCE,
-            }]
+            return [
+                {
+                    "amount": amount,
+                    "dueDate": data.get("expirationDate"),
+                    "reference": data.get("reference") or self.USER_REFERENCE,
+                }
+            ]
         return []
 
     def generate_bill_id(self, bill: Dict[str, Any]) -> str:
