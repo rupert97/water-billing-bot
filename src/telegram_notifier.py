@@ -58,7 +58,7 @@ class TelegramNotifier:
             f"Amount: ${amount:.2f}\n"
             f"Due Date: {self.format_date(due_date)}\n\n"
             f"<b>Payment Details:</b>\n"
-            f"Codigo interno: 2128388\n\n"
+            f"Codigo interno: {os.environ.get('SIMILPAY_USER_REFERENCE')}\n\n"
             f"<a href='https://similpay.com/#/biller_code/18590'>Pay your bill on Similpay</a>"
         )
 
@@ -82,7 +82,7 @@ class TelegramNotifier:
             f"Due Date: {self.format_date(due_date)}\n"
             f"Days Left: {days_left}\n\n"
             f"<b>Payment Details:</b>\n"
-            f"Codigo interno: 2128388\n\n"
+            f"Codigo interno: {os.environ.get('SIMILPAY_USER_REFERENCE')}\n\n"
             f"⏰ <a href='https://similpay.com/#/biller_code/18590'>PAY NOW to avoid late fees!</a>"
         )
 
