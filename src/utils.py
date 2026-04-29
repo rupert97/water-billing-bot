@@ -3,12 +3,12 @@
 import json
 import logging
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 
 logger = logging.getLogger()
 
 
-def safe_json_loads(data: str, default: Optional[Dict] = None) -> Dict:
+def safe_json_loads(data: str, default: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     """
     Safely parse JSON with default fallback
 
@@ -20,9 +20,8 @@ def safe_json_loads(data: str, default: Optional[Dict] = None) -> Dict:
         dict: Parsed JSON or default value
     """
     try:
-        return json.loads(data)
-    except (json.JSONDecodeError, TypeError) as e:
-        logger.warning(f"Failed to parse JSON: {str(e)}")
+        return cast(Dict[str, Any], json.loads(data))
+    except (json.JSONDecodeError, TypeError):
         return default or {}
 
 
@@ -58,7 +57,7 @@ def format_date(date_str: str) -> str:
         return date_str
 
 
-def safe_get(data: Dict, *keys: str, default: Any = None) -> Any:
+def safe_get(data: Dict[str, Any], *keys: str, default: Any = None) -> Any:
     """
     Safely get nested dictionary value
 
@@ -70,7 +69,7 @@ def safe_get(data: Dict, *keys: str, default: Any = None) -> Any:
     Returns:
         Value at nested key or default
     """
-    current = data
+    current: Any = data
     for key in keys:
         if isinstance(current, dict):
             current = current.get(key)

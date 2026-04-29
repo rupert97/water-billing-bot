@@ -48,6 +48,7 @@ class TestStateManager(unittest.TestCase):
         state = manager.get_bill_state("water_bill_2026_05")
 
         self.assertIsNotNone(state)
+        assert state is not None
         self.assertEqual(state["bill_id"], "water_bill_2026_05")
         self.assertTrue(state["notified_new"])
 

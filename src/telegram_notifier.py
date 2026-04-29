@@ -6,7 +6,7 @@ import os
 import urllib.error
 import urllib.request
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Any, cast
 
 logger = logging.getLogger()
 
@@ -16,7 +16,7 @@ class TelegramNotifier:
 
     API_URL = "https://api.telegram.org/bot{token}/sendMessage"
 
-    def __init__(self, token: Optional[str] = None, chat_id: Optional[str] = None):
+    def __init__(self, token: Optional[str] = None, chat_id: Optional[str] = None) -> None:
         """
         Initialize Telegram notifier
 
@@ -99,41 +99,26 @@ class TelegramNotifier:
             bool: True if sent successfully
         """
         if not self.token or not self.chat_id:
-            self.logger.error("Telegram credentials not configured")
             return False
 
         try:
             url = self.API_URL.format(token=self.token)
+            
+            # Bandit B310 Safety Check
+            if not url.startswith('https://'):
+                raise ValueError("Insecure URL scheme")
 
             payload = {"chat_id": self.chat_id, "text": text, "parse_mode": "HTML"}
-
             json_data = json.dumps(payload).encode("utf-8")
 
             request = urllib.request.Request(
                 url, data=json_data, headers={"Content-Type": "application/json"}
             )
 
-            self.logger.info(f"Sending Telegram message to chat {self.chat_id}")
+            with urllib.request.urlopen(request, timeout=10) as response: # nosec B310
+                result = json.loads(response.read().decode("utf-8"))
+                return cast(bool, result.get("ok"))
 
-            with urllib.request.urlopen(request, timeout=10) as response:
-                response_data = response.read().decode("utf-8")
-                result = json.loads(response_data)
-
-                if result.get("ok"):
-                    self.logger.info(
-                        f"Telegram message sent successfully (id: {result.get('result', {}).get('message_id')})"
-                    )
-                    return True
-                else:
-                    self.logger.error(f"Telegram API error: {result.get('description')}")
-                    return False
-
-        except urllib.error.URLError as e:
-            self.logger.error(f"Telegram API connection error: {str(e)}")
-            return False
-        except json.JSONDecodeError as e:
-            self.logger.error(f"Failed to parse Telegram API response: {str(e)}")
-            return False
         except Exception as e:
-            self.logger.error(f"Unexpected error sending Telegram message: {str(e)}")
+            self.logger.error(f"Telegram error: {str(e)}")
             return False

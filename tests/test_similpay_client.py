@@ -46,6 +46,7 @@ class TestSimilpayClient(unittest.TestCase):
 
         result = self.client.query_bills()
         self.assertIsNotNone(result)
+        assert result is not None
         self.assertEqual(result["Code"], "1")
         self.assertEqual(result["Data"]["amount"], 45.50)
 
@@ -94,6 +95,12 @@ class TestSimilpayClient(unittest.TestCase):
         bill = {"dueDate": ""}
         bill_id = self.client.generate_bill_id(bill)
         self.assertEqual(bill_id, "water_bill_unknown")
+
+    def test_safe_urlopen_insecure_scheme(self):
+        """Test _safe_urlopen rejects non-https URLs"""
+        with self.assertRaises(ValueError) as context:
+            self.client._safe_urlopen("http://example.com")
+        self.assertIn("Forbidden URL scheme", str(context.exception))
 
 
 class TestSimilpayClientErrorHandling(unittest.TestCase):

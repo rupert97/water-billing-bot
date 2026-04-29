@@ -95,7 +95,7 @@ class TestLambdaHandler(unittest.TestCase):
         MockSimilpay.side_effect = Exception("Initialization failed")
 
         # Call handler
-        event = {}
+        event: dict = {}
         context = MagicMock()
         response = handler(event, context)
 

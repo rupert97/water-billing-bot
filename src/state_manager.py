@@ -2,7 +2,7 @@
 
 import json
 import logging
-from typing import Dict, Optional
+from typing import Dict, Optional, Any, cast
 
 import boto3
 from botocore.exceptions import ClientError
@@ -21,7 +21,7 @@ class StateManager:
         self.table = self.dynamodb.Table(self.TABLE_NAME)
         self.logger = logger
 
-    def get_bill_state(self, bill_id: str) -> Optional[Dict]:
+    def get_bill_state(self, bill_id: str) -> Optional[Dict[str, Any]]:
         """
         Retrieve bill notification state from DynamoDB
 
@@ -34,16 +34,9 @@ class StateManager:
         try:
             response = self.table.get_item(Key={"bill_id": bill_id})
             item = response.get("Item")
-
-            if item:
-                self.logger.info(f"Retrieved state for bill {bill_id}: {json.dumps(item)}")
-            else:
-                self.logger.info(f"No existing state found for bill {bill_id}")
-
-            return item
-
+            return cast(Optional[Dict[str, Any]], item)
         except ClientError as e:
-            self.logger.error(f"DynamoDB get_item error: {str(e)}")
+            self.logger.error(f"DynamoDB error: {str(e)}")
             return None
 
     def create_bill_state(self, bill_id: str) -> bool:
