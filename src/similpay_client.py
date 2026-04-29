@@ -2,6 +2,7 @@
 
 import json
 import logging
+import os
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -18,13 +19,13 @@ class SimilpayClient:
     QUERY_PATH = "/back_commerce/api/transaction/query"
     # These should ideally be passed in or loaded from env vars
     PROJECT_ID = "18590"
-    USER_REFERENCE = "2128388"
 
     def __init__(self):
         """Initialize Similpay client"""
         self.auth_url = f"https://{self.HOST}{self.AUTH_PATH}"
         self.query_url = f"https://{self.HOST}{self.QUERY_PATH}"
         self.logger = logger
+        self.USER_REFERENCE = os.environ.get("SIMILPAY_USER_REFERENCE", "2128388")
 
     def _get_token(self) -> Optional[str]:
         """Authenticates and returns a fresh Bearer token"""
