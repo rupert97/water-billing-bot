@@ -21,7 +21,7 @@ class TestSimilpayClient(unittest.TestCase):
     def test_client_configuration(self):
         """Test client is properly configured"""
         self.assertEqual(self.client.PROJECT_ID, "18590")
-        self.assertEqual(self.client.USER_REFERENCE, "2128388")
+        self.assertEqual(self.client.USER_REFERENCE, "9999999")
         self.assertEqual(self.client.HOST, "www.similpay.com")
 
     @patch("src.similpay_client.SimilpayClient._get_token")
@@ -36,7 +36,7 @@ class TestSimilpayClient(unittest.TestCase):
             "Data": {
                 "amount": 45.50,
                 "expirationDate": "2026-05-15T00:00:00",
-                "reference": "2128388",
+                "reference": "9999999",
             },
         }
 
@@ -56,7 +56,7 @@ class TestSimilpayClient(unittest.TestCase):
             "Data": {
                 "amount": 45.50,
                 "expirationDate": "2026-05-15T00:00:00",
-                "reference": "2128388",
+                "reference": "9999999",
             },
         }
 
@@ -116,6 +116,15 @@ class TestSimilpayClientErrorHandling(unittest.TestCase):
         api_response = {"invalid": "structure"}
         unpaid = self.client.extract_unpaid_bills(api_response)
         self.assertEqual(len(unpaid), 0)
+
+    @patch.dict("os.environ", {}, clear=True)
+    def test_missing_env_var(self):
+        """Test initialization fails if env var is missing"""
+        with self.assertRaises(ValueError) as context:
+            SimilpayClient()
+        self.assertIn(
+            "SIMILPAY_USER_REFERENCE environment variable is not set", str(context.exception)
+        )
 
 
 if __name__ == "__main__":

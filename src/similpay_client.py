@@ -25,7 +25,10 @@ class SimilpayClient:
         self.auth_url = f"https://{self.HOST}{self.AUTH_PATH}"
         self.query_url = f"https://{self.HOST}{self.QUERY_PATH}"
         self.logger = logger
-        self.USER_REFERENCE = os.environ.get("SIMILPAY_USER_REFERENCE", "2128388")
+        user_ref = os.environ.get("SIMILPAY_USER_REFERENCE")
+        if not user_ref:
+            raise ValueError("SIMILPAY_USER_REFERENCE environment variable is not set")
+        self.USER_REFERENCE = user_ref
 
     def _get_token(self) -> Optional[str]:
         """Authenticates and returns a fresh Bearer token"""
