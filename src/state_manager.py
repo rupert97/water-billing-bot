@@ -2,7 +2,7 @@
 
 import json
 import logging
-from typing import Dict, Optional, Any, cast
+from typing import Any, Dict, Optional, cast
 
 import boto3
 from botocore.exceptions import ClientError

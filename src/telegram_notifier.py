@@ -6,7 +6,7 @@ import os
 import urllib.error
 import urllib.request
 from datetime import datetime
-from typing import Optional, Any, cast
+from typing import Any, Optional, cast
 
 logger = logging.getLogger()
 

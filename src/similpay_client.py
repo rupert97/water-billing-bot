@@ -6,7 +6,7 @@ import os
 import urllib.error
 import urllib.parse
 import urllib.request
-from typing import Dict, List, Optional, Any, cast
+from typing import Any, Dict, List, Optional, cast
 
 logger = logging.getLogger()
 
