@@ -1,0 +1,56 @@
+# Water Billing Tracker Bot - Dependencies
+
+## AWS Lambda Environment
+This application runs on AWS Lambda Python 3.12 runtime.
+
+### Pre-installed in AWS Lambda
+- boto3 (AWS SDK) - Used for DynamoDB integration
+- botocore - Required by boto3
+
+### Python Standard Library (No Installation Required)
+- json - JSON serialization/deserialization
+- logging - Application logging
+- datetime - Date and time handling
+- urllib - HTTP requests (urllib.request, urllib.error)
+- unittest - Testing framework
+- sys - System-specific parameters
+- os - Operating system interfaces
+- typing - Type hints
+
+## Installation for Local Development
+
+```bash
+# For testing locally, install boto3
+pip install boto3>=1.26.0
+
+# Optional: For development/testing only
+pip install boto3 botocore
+```
+
+## No External Dependencies Required for Production
+
+The application uses ONLY:
+1. Python 3.12 standard library
+2. boto3 (pre-installed in AWS Lambda)
+
+This keeps the Lambda package minimal (~500KB) and eliminates dependency management complexity.
+
+## Verification
+
+To verify all imports are available:
+
+```bash
+python -c "
+import json, logging, datetime, urllib.request, unittest, sys, os
+import boto3
+from botocore.exceptions import ClientError
+print('✓ All dependencies available!')
+"
+```
+
+## Environment Requirements
+
+- Python 3.12+
+- AWS Lambda role with DynamoDB permissions
+- Telegram Bot Token (via environment variable)
+- Telegram Chat ID (via environment variable)
