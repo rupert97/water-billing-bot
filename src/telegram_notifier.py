@@ -52,13 +52,13 @@ class TelegramNotifier:
         Returns:
             bool: True if sent successfully
         """
-
+        user_ref = os.environ.get("SIMILPAY_USER_REFERENCE", "N/A")
         message = (
             f"💧 <b>New Water Bill Alert</b>\n\n"
             f"Amount: ${amount:.2f}\n"
             f"Due Date: {self.format_date(due_date)}\n\n"
             f"<b>Payment Details:</b>\n"
-            f"Codigo interno: {os.environ.get('SIMILPAY_USER_REFERENCE')}\n\n"
+            f"Codigo interno: <code>{user_ref}</code>\n\n"
             f"<a href='https://similpay.com/#/biller_code/18590'>Pay your bill on Similpay</a>"
         )
 
@@ -76,13 +76,14 @@ class TelegramNotifier:
         Returns:
             bool: True if sent successfully
         """
+        user_ref = os.environ.get("SIMILPAY_USER_REFERENCE", "N/A")
         message = (
             f"⚠️ <b>URGENT: Water Bill Due Soon</b>\n\n"
             f"Amount: ${amount:.2f}\n"
             f"Due Date: {self.format_date(due_date)}\n"
             f"Days Left: {days_left}\n\n"
             f"<b>Payment Details:</b>\n"
-            f"Codigo interno: {os.environ.get('SIMILPAY_USER_REFERENCE')}\n\n"
+            f"Codigo interno: <code>{user_ref}</code>\n\n"
             f"⏰ <a href='https://similpay.com/#/biller_code/18590'>PAY NOW to avoid late fees!</a>"
         )
 
