@@ -12,12 +12,13 @@ import sys
 from pathlib import Path
 
 # Add src to path
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent / 'src'))
 
 # Mock environment variables before importing
 import os
 os.environ['TELEGRAM_BOT_TOKEN'] = 'test_token'
 os.environ['TELEGRAM_CHAT_ID'] = 'test_chat_id'
+os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
 
 # Create a mock event
 mock_event = {
@@ -59,7 +60,7 @@ if __name__ == '__main__':
         
         if response['statusCode'] == 200:
             print()
-            print("✓ Handler executed successfully!")
+            print("[OK] Handler executed successfully!")
             print()
             print("Note: This is a test run with mocked DynamoDB and Telegram.")
             print("Actual deployment requires:")
@@ -68,11 +69,11 @@ if __name__ == '__main__':
             print("  3. Telegram Chat ID (environment variable)")
         else:
             print()
-            print("✗ Handler returned error status")
+            print("[ERROR] Handler returned error status")
             
     except Exception as e:
         print()
-        print(f"✗ Error: {str(e)}")
+        print(f"[ERROR] Error: {str(e)}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
